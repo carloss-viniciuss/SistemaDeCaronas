@@ -49,7 +49,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'SistemaDetreinos.urls'
+ROOT_URLCONF = 'setup.urls'
 
 TEMPLATES = [
     {
