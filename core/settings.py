@@ -126,3 +126,5 @@ MAILERS = {
         'BACKEND': 'django.core.mail.backends.console.EmailBackend',
     },
 }
+
+X_FRAME_OPTIONS = 'ALLOWALL'
