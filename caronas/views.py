@@ -4,6 +4,8 @@ from django.utils import timezone
 from django.db.models import Sum
 from django.http import HttpResponse
 from .models import Passageiro, RegistroCarona
+from django.template.loader import get_template
+from xhtml2pdf import pisa
 
 
 def registrar_caronas(request):
@@ -69,7 +71,7 @@ def deletar_carona(request, pk):
         carona.delete()
         messages.success(request, "Registro removido com sucesso!")
         return redirect('visualizar_dia')
-    return render(request, 'caronas/deletar_confirmar.html', {'carona': carona})
+    return render(request, 'caronas/confirmar_exclusao.html', {'carona': carona})
 
 # 4. FECHAR CONTA POR PASSAGEIRO
 def fechar_conta(request):
@@ -86,18 +88,32 @@ def fechar_conta(request):
             'qtd': caronas_pendentes.count()
         })
 
-    return render(request, 'caronas/fechar_conta.html', {'dados': dados})
+    return render(request, 'caronas/fechamento_conta.html', {'dados': dados})
 
-# 5. GERADOR DE PDF DE COBRANÇA
+
 def gerar_pdf_cobranca(request, passageiro_id):
     passageiro = get_object_or_404(Passageiro, id=passageiro_id)
     caronas_pendentes = passageiro.caronas.filter(pago=False).order_by('data')
     total = caronas_pendentes.aggregate(Sum('valor_total'))['valor_total__sum'] or 0.00
 
-    # Usamos o HTML imprimível do navegador como PDF limpo
-    return render(request, 'caronas/pdf_cobranca.html', {
+    # 1. Carrega o template HTML e injeta os dados
+    template = get_template('caronas/pdf_cobranca.html')
+    context = {
         'passageiro': passageiro,
         'caronas': caronas_pendentes,
         'total': total,
         'data_emissao': timezone.now()
-    })
+    }
+    html = template.render(context)
+
+    # 2. Configura a resposta HTTP com o cabeçalho de download (.pdf)
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="Cobranca_{passageiro.nome}.pdf"'
+
+    # 3. Converte o HTML em PDF binário
+    pisa_status = pisa.CreatePDF(html, dest=response)
+    
+    if pisa_status.err:
+        return HttpResponse("Erro ao gerar o PDF", status=500)
+        
+    return response

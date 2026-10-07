@@ -23,7 +23,7 @@
             <p style="font-size: 1.2rem; color: #d97706; font-weight: bold;">Total: R$ {{ item.total|floatformat:2 }}</p>
 
             {% if item.qtd > 0 %}
-                <a href="{% url 'gerar_pdf_cobranca' item.passageiro.id %}" target="_blank" class="btn-pdf">📄 Gerar Relatório / PDF</a>
+                <a href="{% url 'gerar_pdf_cobranca' item.passageiro.id %}" target="_blank" class="btn-pdf">Gerar Relatório</a>
             {% else %}
                 <p style="color: #059669; font-weight: bold;">✓ Conta zerada!</p>
             {% endif %}

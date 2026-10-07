@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Carona</title>
+    <style>
+        * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body { background-color: #f1f5f9; padding: 16px; margin: 0; color: #0f172a; }
+        .nav-link { display: inline-block; margin-bottom: 16px; color: #2563eb; text-decoration: none; font-weight: bold; }
+        .card { background: white; border-radius: 12px; padding: 16px; box-shadow: 0 2px 6px rgba(0,0,0,0.04); }
+        .form-group { margin-bottom: 16px; }
+        label { display: block; font-weight: bold; margin-bottom: 6px; }
+        select { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 1rem; }
+        .btn-submit { width: 100%; background: #2563eb; color: white; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 1rem; }
+        .btn-delete { display: block; text-align: center; width: 100%; background: #ef4444; color: white; border: none; padding: 10px; border-radius: 8px; font-weight: bold; text-decoration: none; margin-top: 16px; font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+
+    <a href="{% url 'visualizar_dia' %}" class="nav-link">← Voltar para Resumo do Dia</a>
+
+    <div class="card">
+        <h2>✏️ Editar Registro</h2>
+        <p>Passageiro: <strong>{{ carona.passageiro.nome }}</strong></p>
+        <p style="color: #64748b; font-size: 0.9rem;">Data: {{ carona.data|date:"d/m/Y" }}</p>
+
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="tipo">Tipo de Trajeto:</label>
+                <select name="tipo" id="tipo">
+                    <option value="IDA" {% if carona.tipo == 'IDA' %}selected{% endif %}>Ida</option>
+                    <option value="VOLTA" {% if carona.tipo == 'VOLTA' %}selected{% endif %}>Volta</option>
+                    <option value="AMBOS" {% if carona.tipo == 'AMBOS' %}selected{% endif %}>Ida e Volta</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn-submit">Salvar Alterações</button>
+        </form>
+
+        <a href="{% url 'deletar_carona' carona.id %}" class="btn-delete">🗑️ Apagar este Registro</a>
+    </div>
+
+</body>
+</html>

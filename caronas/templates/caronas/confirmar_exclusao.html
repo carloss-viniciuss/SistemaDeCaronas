@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmar Exclusão</title>
+    <style>
+        * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body { background-color: #f1f5f9; padding: 16px; margin: 0; color: #0f172a; }
+        .nav-link { display: inline-block; margin-bottom: 16px; color: #2563eb; text-decoration: none; font-weight: bold; }
+        .card { background: white; border-radius: 12px; padding: 16px; box-shadow: 0 2px 6px rgba(0,0,0,0.04); text-align: center; }
+        .btn-confirm { background: #ef4444; color: white; border: none; padding: 12px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 1rem; }
+    </style>
+</head>
+<body>
+
+    <a href="{% url 'visualizar_dia' %}" class="nav-link">← Cancelar</a>
+    
+
+    <div class="card">
+        <h2 style="color: #ef4444;"> Confirmar Exclusão</h2>
+        <p>Tem certeza de que deseja apagar o registro de carona de <strong>{{ carona.passageiro.nome }}</strong> ({{ carona.get_tipo_display }}) do dia {{ carona.data|date:"d/m/Y" }}?</p>
+
+        <form method="POST">
+            {% csrf_token %}
+            <button type="submit" class="btn-confirm">Sim, Apagar Registro</button>
+        </form>
+    </div>
+
+</body>
+</html>
