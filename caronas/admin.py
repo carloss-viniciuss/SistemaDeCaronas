@@ -1,3 +1,5 @@
 from django.contrib import admin
+from .models import Passageiro, RegistroCarona
 
-# Register your models here.
+admin.site.register(Passageiro)
+admin.site.register(RegistroCarona)
